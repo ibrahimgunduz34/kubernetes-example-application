@@ -54,7 +54,7 @@ public class FlickrImageCollector implements CommandLineRunner {
                         photo.getSecret());
                 logger.info("Sending: " + photoSource);
                 rabbitTemplate.convertAndSend("photos", photoSource);
-//                Thread.sleep(2000);;
+                Thread.sleep(5);;
             }
         }
     }

@@ -4,7 +4,7 @@ metadata:
   name: downloader
   namespace: imagecollector
 spec:
-  replicas: 1
+  replicas: 4
   selector:
     matchLabels:
       app: downloader
@@ -15,8 +15,10 @@ spec:
     spec:
       volumes:
         - name: data-storage
-          persistentVolumeClaim:
-            claimName: data-volume-claim
+          hostPath:
+              path: /mnt/data
+#          persistentVolumeClaim:
+#            claimName: data-volume-claim
       containers:
         - name: downloader
           image: localhost:5000/image-collector
