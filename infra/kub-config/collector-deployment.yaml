@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: collector
+  namespace: imagecollector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: collector
+  template:
+    metadata:
+      labels:
+        app: collector
+    spec:
+      containers:
+        - name: collector
+          image: localhost:5000/image-collector
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: collector
+            - name: SPRING_RABBITMQ_HOST
+              value: rabbitmq.imagecollector
+          ports:
+            - name: management-port
+              containerPort: 8081
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: management-port
+            failureThreshold: 3
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: management-port
+            initialDelaySeconds: 1
+            periodSeconds: 10
+#          startupProbe:
+#            exec:
+#              command:
+#                - /bin/ps aux|grep image-collector|grep -v grep
+#            failureThreshold: 3
+#            periodSeconds: 10
+#          livenessProbe:
+#            exec:
+#              command:
+#                - /bin/ps aux|grep image-collector|grep -v grep
+#            periodSeconds: 10
+#            initialDelaySeconds: 5

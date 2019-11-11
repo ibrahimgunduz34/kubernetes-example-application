@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: downloader
+  namespace: imagecollector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: downloader
+  template:
+    metadata:
+      labels:
+        app: downloader
+    spec:
+      volumes:
+        - name: data-storage
+          persistentVolumeClaim:
+            claimName: data-volume-claim
+      containers:
+        - name: downloader
+          image: localhost:5000/image-collector
+          volumeMounts:
+            - mountPath: /var/data
+              name: data-storage
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: downloader
+            - name: SPRING_RABBITMQ_HOST
+              value: rabbitmq.imagecollector
+            - name: DOWNLOAD_PATH
+              value: /var/data
+          ports:
+            - name: management-port
+              containerPort: 8081
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: management-port
+            failureThreshold: 3
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: management-port
+            initialDelaySeconds: 1
+            periodSeconds: 10

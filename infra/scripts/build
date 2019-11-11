@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# The current path
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+
+# Project root
+PROJECT_DIR="$SCRIPTPATH/../../"
+
+# Project docker file
+DOCKER_FILE="$PROJECT_DIR/infra/docker/Dockerfile"
+
+# Docker image name
+PROJECT_IMAGE="image-collector:latest"
+
+# Docker registry address
+REGISTRY_ADDR="localhost:5000"
+
+# Full qualified docker image name
+FULL_IMAGE="$REGISTRY_ADDR/$PROJECT_IMAGE"
+
+docker build --no-cache -t $FULL_IMAGE -f $DOCKER_FILE $PROJECT_DIR
+

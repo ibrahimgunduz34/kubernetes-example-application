@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq
+  namespace: imagecollector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: rabbitmq
+          image: rabbitmq:3.8.0-management
+          env:
+            - name: RABBITMQ_ERLANG_COOKIE
+              value: rabbitmq
+          ports:
+            - containerPort: 5672
+              name: amqp
+            - containerPort: 15672
+              name: management

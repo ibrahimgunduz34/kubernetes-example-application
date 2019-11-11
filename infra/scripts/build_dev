@@ -1,0 +1,13 @@
+#!/bin/bash
+# ONLY FOR NON-LINUX USERS (When you need to use vm)
+#eval $(minikube docker-env)
+
+if [[ ! $(docker ps -a -q --filter ancestor=registry) ]]; then
+    docker run -d -p:5000:5000 registry
+fi
+
+# The current path
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+source "$SCRIPTPATH/build"
+
+docker push $FULL_IMAGE
