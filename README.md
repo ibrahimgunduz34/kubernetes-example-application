@@ -1,7 +1,13 @@
 # Image Collector
 
 It allows to collect and download the images from multiple image gallery. Right now, it supports only Flickr.
-The application runs in different modes as `collector` and `downloader
+The application runs in different modes as `collector` and `downloader`
+
+## Prerequisites:
+* Minikube
+* Kubernetes console tool (kubectl)
+* Docker
+* VirtualBox, KVM2 or other hypervisors supported by minikube if you need it. 
 
 ## How To Build The Project
 
@@ -53,4 +59,17 @@ docker run \
 -e SPRING_RABBITMQ_HOST=localhost \
  ... (Other environment variables that depend on the profile.) \
 image-collector:latest
+```
+
+## How To Deploy The Project To Local Kubernetes Cluster
+* Start minikube locally.
+* Compile the application and build the docker image by the build script `infra/scripts/build_dev`. Before run the command, please uncomment the line 3. in the script, if you're using minikube with VM(s).
+
+```
+$ infra/scripts/build_dev
+```
+
+* Deploy the docker image to the local Kubernetes cluster by running the following command:
+ ```
+$ kubernetes apply -f infra/kub-config
 ```
