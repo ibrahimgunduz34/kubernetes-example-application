@@ -5,7 +5,6 @@ import com.flickr4java.flickr.REST;
 import com.flickr4java.flickr.photos.Photo;
 import com.flickr4java.flickr.photos.PhotoList;
 import com.flickr4java.flickr.photos.SearchParameters;
-import org.example.imagecollector.service.ImageCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -23,11 +22,14 @@ public class FlickrImageCollector implements CommandLineRunner {
     @Value("${flickr.api.shared.secret}")
     private String sharedSecret;
 
+    @Value("${collector.request.delay}")
+    private Integer requestDelay;
+
     private final static String[] PHOTO_TAGS = {"cat"};
 
     private RabbitTemplate rabbitTemplate;
 
-    private static Logger logger = LoggerFactory.getLogger(ImageCollector.class);
+    private static Logger logger = LoggerFactory.getLogger(FlickrImageCollector.class);
 
     public FlickrImageCollector(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
@@ -54,7 +56,7 @@ public class FlickrImageCollector implements CommandLineRunner {
                         photo.getSecret());
                 logger.info("Sending: " + photoSource);
                 rabbitTemplate.convertAndSend("photos", photoSource);
-                Thread.sleep(5);;
+                Thread.sleep(requestDelay);;
             }
         }
     }

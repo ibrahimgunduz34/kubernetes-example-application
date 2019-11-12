@@ -15,8 +15,8 @@ import java.net.URL;
 
 @Component
 @Profile("downloader")
-public class ImageListener {
-    private static Logger logger = LoggerFactory.getLogger(ImageListener.class);
+public class ImageDownloader {
+    private static Logger logger = LoggerFactory.getLogger(ImageDownloader.class);
 
     @Value("${download.path}")
     private String downloadPath;
